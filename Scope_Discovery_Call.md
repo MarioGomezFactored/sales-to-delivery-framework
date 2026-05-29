@@ -4,6 +4,27 @@
 
 ---
 
+## Terminology
+
+| Term | Meaning in this document |
+|---|---|
+| **AE** | Account Executive — owns the commercial relationship and closes the call |
+| **SA** | Solutions Architect — leads technical discovery and owns the scope estimate |
+| **`[AE]`** | This question is relationship or business-facing; the AE asks it |
+| **`[SA]`** | This question requires technical depth; the SA asks it |
+| **`→ Platform`** | Conditional branch — ask only if the client confirmed that platform or project type |
+| **Scope** | The agreed set of deliverables, boundaries, and acceptance criteria for the engagement |
+| **Greenfield** | Nothing exists yet; we are building from scratch |
+| **Brownfield** | Existing systems, data, or code that we must build on, integrate with, or replace |
+| **Source of truth** | The authoritative system for a given dataset — the one that wins in a conflict |
+| **SLA** | Service Level Agreement — the agreed freshness or availability target for a pipeline or dataset |
+| **CDC** | Change Data Capture — tracking row-level inserts, updates, and deletes from a source system |
+| **Semantic layer** | A business-facing definition of metrics and dimensions sitting above the physical data model |
+| **Handoff** | The moment Factored transfers ownership of a deliverable to the client team |
+| **Complexity red flag** | Any signal during the call that the actual effort will exceed the initial estimate |
+
+---
+
 ## How to use this
 
 The AE opens the call and owns Blocks 1 and 4. The solutions architect (SA) owns Blocks 2 and 3.
