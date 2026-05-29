@@ -106,11 +106,11 @@ Looking forward to our session on [Date] at [Time]. Here's what we'll cover:
 | # | Topic | Time |
 |---|---|---|
 | 1 | Introductions + session goals | 5 min |
-| 2 | Business context — where you are today | 15 min |
-| 3 | The problem in depth — root causes and impact | 20 min |
-| 4 | The desired future state — what success looks like | 15 min |
-| 5 | Technical landscape — current stack and constraints | 20 min |
-| 6 | Team and process context | 10 min |
+| 2 | Business context — where you are today | 10 min |
+| 3 | The problem and the desired outcome | 15 min |
+| 4 | Data landscape — ingestion to delivery | 40 min |
+| 5 | Developer workflow and operations | 10 min |
+| 6 | Open topics + pain point | 5 min |
 | 7 | Next steps | 5 min |
 
 **What we'll ask you to bring:**
@@ -154,87 +154,126 @@ Goal: Understand the business problem before the technical problem. Technical so
 
 ---
 
-### Block 3 — The Problem in Depth (20 min)
+### Block 3 — The Problem and the Desired Outcome (15 min)
 
-Goal: Get to the root problem, not the symptom. Clients often describe what they want built, not what problem they need solved.
+Goal: Get to the root problem and a concrete definition of success before touching anything technical. Clients often describe what they want built, not what problem they need solved.
 
 **Questions to ask:**
 
-1. *"Describe what happens today, step by step, when [the problem occurs]. Walk me through it like I've never seen your system."*
-
-2. *"What does this cost you — in time, money, or opportunity — when it happens? Can you quantify it?"*
-
+1. *"Describe what happens today when [the problem occurs]. Walk me through it like I've never seen your system."*
+2. *"What does this cost you — in time, money, or opportunity? Can you quantify it?"*
 3. *"Have you tried to solve this before? What happened?"*
+4. *"Imagine it's 90 days from now and this worked perfectly. What changed in your team's day-to-day?"*
+5. *"How will you know concretely that it's working? What will you measure?"*
+6. *"What is the one thing that, if we got wrong, would make this project a failure?"*
 
-4. *"What is the one thing that, if we got wrong, would make this project a failure?"*
+**Facilitation tip:** If the client cannot answer question 5 (how will you measure it), flag it as a risk immediately. A project without measurable success criteria cannot be declared done — it will run forever or end in dispute.
 
-5. *"What are you most worried about in terms of how this could go wrong?"*
+**If the client has trouble articulating the root problem:**
+Use the "5 Whys" technique (Toyota Production System / Lean): ask "why" to each answer until you reach a root cause, not a symptom.
 
-**Facilitation tip:** Question 3 is critical. Prior attempts reveal constraints, political landmines, and what has already been ruled out. Never propose something a client has already tried and abandoned without understanding why it failed.
-
-**If the client has trouble articulating the problem:**
-Use the "5 Whys" technique (Toyota Production System / Lean methodology): ask "why" to each answer until you reach a root cause, not a symptom.
-
-> Example: "Our dashboards are slow." → Why? "The queries take too long." → Why? "We don't have indexes on the main tables." → Why? "The data team doesn't have ownership of the warehouse schema." → *That's* the real problem.
-
----
-
-### Block 4 — The Desired Future State (15 min)
-
-Goal: Establish what "done" looks like with enough specificity to build success criteria. Vague goals produce vague delivery.
-
-**Questions to ask:**
-
-1. *"Imagine it's 90 days from now and this project has gone perfectly. What does a day in the life look like for your team?"*
-
-2. *"How will you know — concretely — that this is working? What will you measure?"*
-
-3. *"Is there a specific benchmark or standard you're trying to reach? (Latency, accuracy, uptime, user adoption rate, etc.)"*
-
-4. *"Are there any constraints on the solution — things it must not do, or must integrate with, or must avoid?"*
-
-5. *"What does a minimum viable success look like at 30 days vs. full success at 90 days?"*
-
-**Facilitation tip:** If the client can't answer question 2 (how will you measure it), that is a risk. A project without measurable success criteria cannot be declared done — it will run forever or end in dispute. Surface this now, not at week 8.
+> Example: "Our dashboards are slow." → Why? "The queries take too long." → Why? "We don't have indexes." → Why? "The data team doesn't own the warehouse schema." → *That's* the real problem.
 
 ---
 
-### Block 5 — Technical Landscape (20 min)
+### Block 4 — Data Landscape: Ingestion → Modeling → Processing → Delivery (40 min)
 
-Goal: Understand the technical environment the solution will live in. This section feeds directly into the Operational SOW and the Access & Tools Checklist.
+Goal: Map the client's full data value chain. This is the core technical scoping block. Work through each layer in order — they build on each other.
 
-**Questions to ask:**
-
-**On current state:**
-1. *"Walk me through your current tech stack — what are the main systems involved in this problem?"*
-2. *"Where does your data live today? (Databases, warehouses, lakes, files, APIs)"*
-3. *"What cloud provider(s) are you on? Are there constraints on adding new services?"*
-4. *"What does your deployment pipeline look like? (CI/CD, environments, release cadence)"*
-
-**On constraints:**
-5. *"Are there security or compliance requirements we need to design around? (SOC2, HIPAA, GDPR, internal infosec policies)"*
-6. *"Are there systems or services that are off-limits for us to touch or modify?"*
-7. *"What are the scalability expectations? (Volume, users, data growth over 12 months)"*
-
-**On team:**
-8. *"Who on your side will be working with our team day-to-day? What's their technical background?"*
-9. *"Is there any internal resistance or skepticism about this project we should know about?"*
-
-**Facilitation tip:** Question 9 is the most politically sensitive — frame it as preparation, not concern: *"We've found that knowing about any internal dynamics early helps us calibrate our communication style and avoid stepping on toes."*
+> **Framing line to open this block:**
+> *"I want to understand how data flows through your organization — from where it comes in, to how it's structured, processed, and finally used. Let's go layer by layer."*
 
 ---
 
-### Block 6 — Team and Process Context (10 min)
+#### 4a — Ingestion (8 min)
 
-Goal: Understand how the client team works so Factored.ai can integrate smoothly, not disrupt.
+*"Let's start at the beginning — where does your data come from?"*
+
+1. *"What are all the sources you're ingesting from? (APIs, databases, files, event streams, SaaS tools, IoT sensors, etc.)"*
+2. *"What volume of data are you ingesting, and at what frequency? (Batch / real-time / micro-batch)"*
+3. *"What types of data are involved? (Structured tables, semi-structured JSON/XML, unstructured text, images, logs)"*
+4. *"Who owns each ingestion pipeline today? Is it automated or manual?"*
+
+**What to listen for:** Fragmented ownership (multiple teams managing different sources independently) is a common sign of a data platform problem, not a downstream problem.
+
+---
+
+#### 4b — Modeling (8 min)
+
+*"Once the data is in — where does it live and how is it organized?"*
+
+1. *"Where are you storing your data? (Relational DB, data lake, data warehouse, lakehouse, hybrid)"*
+2. *"What structure do you follow? (Star schema, OBT, medallion architecture, ad hoc)"*
+3. *"Is there a semantic layer or data catalog? (dbt models, Looker PDTs, Unity Catalog, etc.)"*
+4. *"Who is responsible for modeling — is it centralized or distributed across teams?"*
+
+**What to listen for:** If there is no modeling layer ("we query the raw tables directly"), that is a signal of significant technical debt and a scoping risk.
+
+---
+
+#### 4c — Processing (8 min)
+
+*"How do you actually transform and process the data?"*
+
+1. *"What tools or frameworks are you using to process and transform data? (Spark, dbt, Snowflake, Databricks, Airflow, custom scripts)"*
+2. *"How is the processing orchestrated? (Airflow, Prefect, Dagster, cron jobs, manual triggers)"*
+3. *"What does a typical pipeline failure look like and how is it handled today?"*
+4. *"Are there any heavy compute workloads — ML training, large aggregations, real-time scoring?"*
+
+**What to listen for:** "Cron jobs" and "manual triggers" are signals of fragile, unobservable pipelines. This often drives the core of what Factored gets hired to fix.
+
+---
+
+#### 4d — Delivery (8 min)
+
+*"Now the end of the chain — how does processed data actually reach the people who use it?"*
+
+1. *"What is the current output of your data pipeline? (Dashboards/reports, API endpoints, ML model outputs, agentic workflows, operationalized features in a product)"*
+2. *"Who consumes this output — analysts, business users, downstream systems, end customers?"*
+3. *"How satisfied are consumers with the current output? Are there recurring complaints?"*
+4. *"Is the delivery real-time, scheduled, or on-demand?"*
+
+**What to listen for:** A gap between the sophistication of the infrastructure and the quality of the output (e.g., a complex pipeline producing unreliable reports) often points to a modeling or orchestration issue that is being masked.
+
+---
+
+#### 4e — Pending Topics (8 min)
+
+Cover these after the main pipeline walk-through. They often get forgotten but are critical for scoping.
+
+1. **Data Quality:** *"Do you have any data quality checks in place? Are there known data quality issues today? What is the impact when bad data reaches downstream consumers?"*
+2. **SLAs:** *"Do you have formal or informal SLAs for your pipelines? (e.g., dashboards must be refreshed by 8am, model must score within 200ms)"*
+3. **Costs:** *"Do you have visibility into your data infrastructure costs? Is cost optimization a concern or constraint for this engagement?"*
+4. **Bottlenecks:** *"Where does your pipeline break or slow down most often? What is your biggest operational pain right now?"*
+5. **Monitoring and Alerting:** *"How do you know when something breaks? Do you have observability tooling in place? (data contracts, anomaly detection, alerting on freshness/volume)"*
+
+---
+
+### Block 5 — Developer Workflow and Operations (10 min)
+
+Goal: Understand how the client's engineering team works so Factored can integrate without disruption.
 
 **Questions to ask:**
 
-1. *"How does your team currently manage work? (Jira, Linear, Notion, etc.)"*
-2. *"What communication tools do you use? (Slack, Teams, email)"*
-3. *"How often do you expect to sync with our team? (Daily standups, weekly reviews)"*
-4. *"Who is the decision-maker for technical questions? For business/scope questions? Are they the same person?"*
-5. *"Is there anything about how your team works that we should adapt to?"*
+1. *"How do your developers work? Walk me through how a change goes from an engineer's laptop to production."*
+2. *"Do you have CI/CD pipelines in place? (GitHub Actions, Jenkins, CircleCI, etc.)"*
+3. *"Are you using Infrastructure as Code? (Terraform, Pulumi, CDK)"*
+4. *"What cloud provider(s) are you on, and are there constraints on adding new services or tools?"*
+5. *"Are there security or compliance requirements we need to design around? (SOC2, HIPAA, GDPR)"*
+6. *"Who on your side will work with our team day-to-day? What is their technical background?"*
+7. *"Is there any internal resistance or skepticism about this project we should know about?"*
+
+**Facilitation tip:** Question 7 is politically sensitive — frame it as preparation: *"Knowing about any internal dynamics early helps us calibrate our approach and avoid stepping on toes."*
+
+---
+
+### Block 6 — Open Topics + Main Pain Point (5 min)
+
+Always end the technical section with this question. It catches everything you didn't think to ask.
+
+> *"We've covered a lot of ground. Before we close — what is your main pain point today? If you had to pick the one thing keeping your team up at night, what is it?"*
+
+This question, asked after the detailed pipeline walk-through, produces much more specific answers than if asked cold at the start. The client has had 40 minutes to think about their system — their answer here is usually the most honest and actionable thing in the whole session.
 
 ---
 
@@ -312,9 +351,9 @@ ___________________________________________________________
 
 ---
 
-## SECTION 2 — Problem Definition
+## SECTION 3 — Problem, Outcome, and Success Criteria
 
-### 2.1 What is the problem as the client describes it?
+### 3.1 What is the problem as the client describes it?
 *(Their words, not your interpretation)*
 
 ```
@@ -322,15 +361,15 @@ ___________________________________________________________
 ___________________________________________________________
 ```
 
-### 2.2 What is the root problem?
-*(After applying 5 Whys or your own analysis — this may differ from 2.1)*
+### 3.2 What is the root problem?
+*(After applying 5 Whys — this may differ from 3.1)*
 
 ```
 ___________________________________________________________
 ___________________________________________________________
 ```
 
-### 2.3 What has been tried before?
+### 3.3 What has been tried before?
 *(Prior attempts, vendors, internal initiatives — and why they failed)*
 
 ```
@@ -338,27 +377,15 @@ ___________________________________________________________
 ___________________________________________________________
 ```
 
-### 2.4 What is the quantified cost of the problem today?
-*(Time per week, revenue lost, error rate, manual hours, etc.)*
+### 3.4 What is the quantified cost of the problem today?
+*(Time per week, revenue lost, error rate, manual hours)*
 
 ```
 ___________________________________________________________
 ___________________________________________________________
 ```
 
-### 2.5 What is the single thing that would make this project a failure?
-*(Their biggest fear)*
-
-```
-___________________________________________________________
-___________________________________________________________
-```
-
----
-
-## SECTION 3 — Success Criteria
-
-### 3.1 What does success look like at 30 days?
+### 3.5 What does success look like at 30 days?
 *(Minimum viable outcome — what must be true for the client to feel the project is on track)*
 
 ```
@@ -366,7 +393,7 @@ ___________________________________________________________
 ___________________________________________________________
 ```
 
-### 3.2 What does success look like at 90 days?
+### 3.6 What does success look like at 90 days?
 *(Full outcome — what the client will point to as the measure of success)*
 
 ```
@@ -374,7 +401,7 @@ ___________________________________________________________
 ___________________________________________________________
 ```
 
-### 3.3 How will success be measured?
+### 3.7 How will success be measured?
 *(Specific metrics, thresholds, KPIs — if they couldn't answer this, note it as a risk)*
 
 | Metric | Current Baseline | Target | Measurement Method |
@@ -383,8 +410,16 @@ ___________________________________________________________
 | | | | |
 | | | | |
 
-### 3.4 What is explicitly out of scope?
+### 3.8 What is explicitly out of scope?
 *(Things that came up in conversation that are NOT part of this engagement)*
+
+```
+___________________________________________________________
+___________________________________________________________
+```
+
+### 3.9 Main pain point (closing question)
+*(Answer to: "If you had to pick the one thing keeping your team up at night, what is it?")*
 
 ```
 ___________________________________________________________
@@ -393,88 +428,158 @@ ___________________________________________________________
 
 ---
 
-## SECTION 4 — Technical Landscape
+## SECTION 4 — Data Landscape
 
-### 4.1 Current Tech Stack
+*Map the full pipeline: Ingestion → Modeling → Processing → Delivery. Fill each layer in order.*
 
-| Layer | Technology / Tool | Notes |
-|---|---|---|
-| Frontend | | |
-| Backend / API | | |
-| Database(s) | | |
-| Data Warehouse / Lake | | |
-| ML / AI Platform | | |
-| Cloud Provider | | |
-| CI/CD Pipeline | | |
-| Monitoring / Observability | | |
-| Authentication / Identity | | |
-| Other critical systems | | |
+---
 
-### 4.2 Data Landscape
-*(Especially relevant for AI/ML and data engineering engagements)*
+### 4.1 Ingestion
 
 ```
-Where does the relevant data live?
+Data sources (list all):
 ___________________________________________________________
 
-What is the data volume / velocity?
+Ingestion frequency: (Real-time / Micro-batch / Daily batch / Manual)
 ___________________________________________________________
 
-Is the data labeled / structured / clean? (Be honest here)
+Data volume (GB/day or records/day):
 ___________________________________________________________
 
-Who owns the data pipeline today?
+Data types: (Structured / Semi-structured / Unstructured / Mixed)
 ___________________________________________________________
 
-Are there known data quality issues?
+Who owns each ingestion pipeline today?
+___________________________________________________________
+
+Is any ingestion currently manual or fragile?
 ___________________________________________________________
 ```
 
-### 4.3 Compliance and Security Requirements
+---
+
+### 4.2 Modeling
 
 ```
-Regulatory frameworks in scope: (HIPAA / SOC2 / GDPR / PCI / internal policy)
+Where is data stored? (Data warehouse / Data lake / Lakehouse / Raw DB / Hybrid)
+Tool(s): ___________________________________________________
+
+Data structure followed: (Star schema / OBT / Medallion / Ad hoc / None)
+___________________________________________________________
+
+Is there a semantic or transformation layer? (dbt / Looker PDTs / Unity Catalog / None)
+___________________________________________________________
+
+Is modeling centralized (one team) or distributed (each team models their own)?
+___________________________________________________________
+
+Known modeling debt or "query the raw tables" situations:
+___________________________________________________________
+```
+
+---
+
+### 4.3 Processing
+
+```
+Transformation tools: (dbt / Spark / Snowflake / Databricks / custom scripts / other)
+___________________________________________________________
+
+Orchestration tool: (Airflow / Prefect / Dagster / cron / manual / none)
+___________________________________________________________
+
+Are there heavy compute workloads? (ML training / large aggregations / real-time scoring)
+___________________________________________________________
+
+How are pipeline failures handled today?
+___________________________________________________________
+
+Is processing observable? (Logs, alerts, SLA tracking in place?)
+___________________________________________________________
+```
+
+---
+
+### 4.4 Delivery
+
+```
+What is the current output of the pipeline?
+  ☐ Reports / Dashboards (tool: ___________________________)
+  ☐ API endpoints / data products
+  ☐ ML model outputs / predictions
+  ☐ Agentic / automated workflows
+  ☐ Operationalized features in a product
+  ☐ Other: _______________________________________________
+
+Who consumes the output? (Analysts / Business users / Engineers / End customers)
+___________________________________________________________
+
+Is delivery real-time, scheduled, or on-demand?
+___________________________________________________________
+
+Known complaints or recurring failures from consumers:
+___________________________________________________________
+```
+
+---
+
+### 4.5 Pending Topics
+
+```
+DATA QUALITY
+Are DQ checks in place? (Great Expectations / dbt tests / custom / none)
+___________________________________________________________
+Known data quality issues and their downstream impact:
+___________________________________________________________
+
+SLAs
+Are there formal or informal SLAs? (e.g., dashboard by 8am, model latency < 200ms)
+___________________________________________________________
+What happens today when an SLA is missed?
+___________________________________________________________
+
+COSTS
+Is infrastructure cost visibility in place?
+___________________________________________________________
+Is cost optimization a constraint or goal for this engagement?
+___________________________________________________________
+
+BOTTLENECKS
+Where does the pipeline break or slow down most often?
+___________________________________________________________
+What is the biggest operational pain right now?
+___________________________________________________________
+
+MONITORING AND ALERTING
+How does the team know when something breaks?
+___________________________________________________________
+Observability tooling in place: (data contracts / anomaly detection / freshness alerts / none)
+___________________________________________________________
+```
+
+---
+
+### 4.6 Developer Workflow and Operations
+
+```
+Cloud provider(s): ________________________________________
+Constraints on adding new services or tools: ______________
+
+CI/CD in place? (GitHub Actions / Jenkins / CircleCI / none)
+___________________________________________________________
+
+Infrastructure as Code? (Terraform / Pulumi / CDK / none)
+___________________________________________________________
+
+Compliance requirements: (SOC2 / HIPAA / GDPR / PCI / internal policy)
 ___________________________________________________________
 
 Data residency requirements:
 ___________________________________________________________
 
-Access control constraints (can we use cloud services freely?):
-___________________________________________________________
-
-Penetration testing or security review required before go-live?
+Systems off-limits (cannot be touched or modified):
 ___________________________________________________________
 ```
-
-### 4.4 Systems Off-Limits
-*(List any systems Factored cannot touch, modify, or access)*
-
-```
-___________________________________________________________
-___________________________________________________________
-```
-
-### 4.5 Scalability Expectations
-
-```
-Current load (users / records / requests per day):
-___________________________________________________________
-
-Expected load in 12 months:
-___________________________________________________________
-
-Peak load scenarios (if any):
-___________________________________________________________
-```
-
-### 4.6 Integration Points
-*(List every external system this solution must connect to)*
-
-| System | Type | Owner | Complexity Estimate |
-|---|---|---|---|
-| | API / DB / File / Event | | Low / Med / High |
-| | API / DB / File / Event | | Low / Med / High |
-| | API / DB / File / Event | | Low / Med / High |
 
 ---
 
@@ -645,10 +750,10 @@ Stored in: (location in Drive / Notion / CRM) ___________
 Complete within 24 hours of the discovery session:
 
 - [ ] Summary email sent to client (using Block 7 close from the meeting agenda)
-- [ ] DTC Sections 1–8 filled completely
+- [ ] DTC Sections 1–7 filled completely
 - [ ] Any open questions listed and assigned to a follow-up owner
-- [ ] Access & Tools Checklist sent to client IT contact
-- [ ] Operational SOW drafted based on Section 3 (Success Criteria) and Section 4 (Technical Landscape)
+- [ ] Access & Tools Checklist sent to client IT contact (use Section 4.6 as source)
+- [ ] Operational SOW drafted based on Section 3 (Problem + Success Criteria) and Section 4 (Data Landscape)
 - [ ] Gate 2 sign-off meeting scheduled with Delivery Lead
 - [ ] Risk flags communicated to Account Executive
 
